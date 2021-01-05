@@ -12,7 +12,7 @@ class Dom {
   }
 
   text(text) {
-    if (typeof text === 'string') {
+    if (typeof text !== 'undefined') {
       this.$el.textContent = text
       return this
     }
@@ -27,12 +27,12 @@ class Dom {
     return this
   }
 
-  on(eventType, callBack) {
-    this.$el.addEventListener(eventType, callBack)
+  on(eventType, callback) {
+    this.$el.addEventListener(eventType, callback)
   }
 
-  off(eventType, callBack) {
-    this.$el.removeEventListener(eventType, callBack)
+  off(eventType, callback) {
+    this.$el.removeEventListener(eventType, callback)
   }
 
   find(selector) {
@@ -49,6 +49,7 @@ class Dom {
     } else {
       this.$el.appendChild(node)
     }
+
     return this
   }
 
@@ -60,7 +61,7 @@ class Dom {
     return $(this.$el.closest(selector))
   }
 
-  getCords() {
+  getCoords() {
     return this.$el.getBoundingClientRect()
   }
 
@@ -72,6 +73,13 @@ class Dom {
     Object.keys(styles).forEach((key) => {
       this.$el.style[key] = styles[key]
     })
+  }
+
+  getStyles(styles = []) {
+    return styles.reduce((res, s) => {
+      res[s] = this.$el.style[s]
+      return res
+    }, {})
   }
 
   id(parse) {
@@ -90,13 +98,21 @@ class Dom {
     return this
   }
 
+  attr(name, value) {
+    if (value) {
+      this.$el.setAttribute(name, value)
+      return this
+    }
+    return this.$el.getAttribute(name)
+  }
+
   addClass(className) {
-    return this.$el.classList.add(className)
+    this.$el.classList.add(className)
     return this
   }
 
   removeClass(className) {
-    return this.$el.classList.remove(className)
+    this.$el.classList.remove(className)
     return this
   }
 }
